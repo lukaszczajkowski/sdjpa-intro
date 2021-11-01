@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.Rollback;
 
@@ -15,6 +16,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataJpaTest
+@ComponentScan(basePackages = {"guru.springframework.sdjpaintro.bootstrap"})
 public class SpringBootJpaTestSplice {
 
     @Autowired
@@ -26,7 +28,7 @@ public class SpringBootJpaTestSplice {
     @Test
     void testJpaTestSplice() {
         long countBefore = bookRepository.count();
-        assertThat(countBefore).isEqualTo(0);
+        assertThat(countBefore).isEqualTo(2);
 
         bookRepository.save(new Book("My book", "123123", "self"));
 
@@ -39,6 +41,6 @@ public class SpringBootJpaTestSplice {
     @Test
     void testJpaTestSpliceTransaction() {
         long countBefore = bookRepository.count();
-        assertThat(countBefore).isEqualTo(1);
+        assertThat(countBefore).isEqualTo(3);
     }
 }
