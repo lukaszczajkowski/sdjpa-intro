@@ -3,10 +3,9 @@ package guru.springframework.sdjpaintro;
 import guru.springframework.sdjpaintro.domain.AuthorUuid;
 import guru.springframework.sdjpaintro.domain.BookNatural;
 import guru.springframework.sdjpaintro.domain.BookUuid;
-import guru.springframework.sdjpaintro.repositories.AuthorUuidRepository;
-import guru.springframework.sdjpaintro.repositories.BookNaturalRepository;
-import guru.springframework.sdjpaintro.repositories.BookRepository;
-import guru.springframework.sdjpaintro.repositories.BookUuidRepository;
+import guru.springframework.sdjpaintro.domain.composite.AuthorComposite;
+import guru.springframework.sdjpaintro.domain.composite.NameId;
+import guru.springframework.sdjpaintro.repositories.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +34,9 @@ public class MySQLIntegrationTest {
     @Autowired
     BookNaturalRepository bookNaturalRepository;
 
+    @Autowired
+    AuthorCompositeRepository authorCompositeRepository;
+
     BookUuid savedBookUuid;
     AuthorUuid savedAuthorUuid;
 
@@ -42,6 +44,21 @@ public class MySQLIntegrationTest {
     void setUp() {
         savedBookUuid = bookUuidRepository.save(new BookUuid("test", "test1", "test2"));
         savedAuthorUuid = authorUuidRepository.save(new AuthorUuid("test", "test1"));
+    }
+
+    @Test
+    void authorCompositeTest() {
+        NameId nameId = new NameId("Anna", "Malecka");
+        AuthorComposite authorComposite = new AuthorComposite();
+        authorComposite.setFirstName(nameId.getFirstName());
+        authorComposite.setLastName(nameId.getLastName());
+        authorComposite.setCountry("PL");
+
+        AuthorComposite saved = authorCompositeRepository.save(authorComposite);
+        assertThat(saved).isNotNull();
+
+        AuthorComposite retrieved = authorCompositeRepository.getById(nameId);
+        assertThat(retrieved).isNotNull();
     }
 
     @Test
